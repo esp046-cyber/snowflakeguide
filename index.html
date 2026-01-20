@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snowflake Beginners Guide 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #0c1e3d 0%, #1a3a5c 100%);
+            color: #fff;
+            margin: 1%;
+            padding-bottom: 80px;
+        }
+        
+        header {
+            background: rgba(41, 128, 185, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 1%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h1 {
+            font-size: 18px;
+            color: #29b5e8;
+            font-weight: 600;
+            text-align: center;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-size: 11px;
+            color: #a8d8f0;
+            margin-top: 5px;
+        }
+        
+        .search-bar {
+            margin: 15px 1% 20px 1%;
+            position: relative;
+        }
+        
+        .search-bar input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(41, 181, 232, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 13px;
+        }
+        
+        .search-bar input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #29b5e8;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin: 1%;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        
+        .tab {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(41, 181, 232, 0.3);
+            border-radius: 20px;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            background: #29b5e8;
+            border-color: #29b5e8;
+        }
+        
+        .content {
+            margin: 1%;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section h2 {
+            font-size: 15px;
+            color: #29b5e8;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section h3 {
+            font-size: 13px;
+            color: #5dccf7;
+            margin: 12px 0 8px 0;
+        }
+        
+        .section p, .section li {
+            font-size: 12px;
+            line-height: 1.6;
+            color: #d4e9f7;
+            margin-bottom: 8px;
+        }
+        
+        .section ul {
+            margin-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 3px solid #29b5e8;
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            overflow-x: auto;
+            margin: 10px 0;
+            color: #5dccf7;
+        }
+        
+        .tip-box {
+            background: rgba(46, 204, 113, 0.1);
+            border-left: 3px solid #2ecc71;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        
+        .warning-box {
+            background: rgba(230, 126, 34, 0.1);
+            border-left: 3px solid #e67e22;
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        
+        .card {
+            background: rgba(41, 181, 232, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            margin: 8px 0;
+            border: 1px solid rgba(41, 181, 232, 0.2);
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(12, 30, 61, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: #a8d8f0;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item.active {
+            color: #29b5e8;
+        }
+        
+        .icon {
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>❄️ Snowflake Beginners Guide</h1>
+        <div class="subtitle">Your Complete 2026 Getting Started Companion</div>
+    </header>
+    
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search topics...">
+        <span class="search-icon">🔍</span>
+    </div>
+    
+    <div class="tabs">
+        <div class="tab active" data-section="basics">Basics</div>
+        <div class="tab" data-section="setup">Setup</div>
+        <div class="tab" data-section="sample">Sample Data</div>
+        <div class="tab" data-section="sql">SQL Guide</div>
+        <div class="tab" data-section="datatypes">Data Types</div>
+        <div class="tab" data-section="roles">Roles</div>
+        <div class="tab" data-section="warehouse">Warehouses</div>
+        <div class="tab" data-section="timetravel">Time Travel</div>
+        <div class="tab" data-section="worksheets">Worksheets</div>
+        <div class="tab" data-section="data">Data Loading</div>
+        <div class="tab" data-section="errors">Errors</div>
+        <div class="tab" data-section="tips">Best Practices</div>
+    </div>
+    
+    <div class="content">
+        <!-- Basics Section -->
+        <div class="section active" id="basics">
+            <h2>🌟 What is Snowflake?</h2>
+            <p>Snowflake is a cloud-based data platform that allows you to store, process, and analyze data at scale. Think of it as a powerful database in the cloud that can handle massive amounts of data.</p>
+            
+            <h3>Key Features:</h3>
+            <ul>
+                <li><strong>Cloud-Native:</strong> Runs entirely in the cloud (AWS, Azure, GCP)</li>
+                <li><strong>Scalable:</strong> Automatically scales up or down based on your needs</li>
+                <li><strong>Separation of Storage & Compute:</strong> Pay only for what you use</li>
+                <li><strong>Zero Maintenance:</strong> No infrastructure to manage</li>
+                <li><strong>Secure:</strong> Enterprise-grade security built-in</li>
+            </ul>
+            
+            <div class="tip-box">
+                💡 <strong>Beginner Tip:</strong> Snowflake uses standard SQL, so if you know SQL, you're already halfway there!
+            </div>
+            
+            <div class="card">
+                <h3>Architecture Overview</h3>
+                <p><strong>Three Layers:</strong></p>
+                <p>1. <strong>Storage Layer:</strong> Where your data lives<br>
+                2. <strong>Compute Layer:</strong> Virtual warehouses that process queries<br>
+                3. <strong>Cloud Services:</strong> Manages authentication, metadata, optimization</p>
+            </div>
+        </div>
+        
+        <!-- Setup Section -->
+        <div class="section" id="setup">
+            <h2>⚙️ Getting Started</h2>
+            
+            <h3>Step 1: Sign Up</h3>
+            <p>1. Go to snowflake.com<br>
+            2. Click "Start for Free" (30-day trial with $400 credits)<br>
+            3. Choose your cloud provider (AWS, Azure, or GCP)<br>
+            4. Select your region (choose one close to you)</p>
+            
+            <h3>Step 2: Login to Snowsight</h3>
+            <p>Snowsight is Snowflake's modern web interface where you'll do most of your work.</p>
+            
+            <div class="code-block">
+                Your URL will look like:
+                https://[account].snowflakecomputing.com
+            </div>
+            
+            <h3>Step 3: Navigate the Interface</h3>
+            <ul>
+                <li><strong>Worksheets:</strong> Write and run SQL queries</li>
+                <li><strong>Databases:</strong> View your data structures</li>
+                <li><strong>Data:</strong> Explore tables and views</li>
+                <li><strong>Warehouses:</strong> Manage compute resources</li>
+                <li><strong>Admin:</strong> User and account management</li>
+            </ul>
+            
+            <div class="tip-box">
+                💡 <strong>Quick Start:</strong> Click on "Worksheets" to start writing your first query!
+            </div>
+            
+            <h3>Step 4: Set Your Role & Warehouse</h3>
+            <div class="code-block">
+                USE ROLE ACCOUNTADMIN;
+                USE WAREHOUSE COMPUTE_WH;
+            </div>
+        </div>
+        
+        <!-- Sample Data Section -->
+        <div class="section" id="sample">
+            <h2>🎯 Practice with Sample Data</h2>
+            
+            <p>Snowflake provides FREE sample databases you can query immediately - no data loading required!</p>
+            
+            <div class="tip-box">
+                💡 <strong>Perfect for Learning:</strong> These databases are already loaded in every Snowflake account. Just copy and run the queries below!
+            </div>
+            
+            <h3>Accessing Sample Databases</h3>
+            <div class="code-block">
+                -- View all sample databases
+                SHOW DATABASES LIKE 'SNOWFLAKE_SAMPLE_DATA';
+                
+                -- Use the sample database
+                USE DATABASE SNOWFLAKE_SAMPLE_DATA;
+            </div>
+            
+            <h3>Available Sample Datasets</h3>
+            <div class="card">
+                <p><strong>TPCH_SF1:</strong> Business data (customers, orders, products)<br>
+                <strong>TPCDS_SF10TCL:</strong> Retail sales data<br>
+                <strong>WEATHER:</strong> Global weather information<br>
+                <strong>COVID19:</strong> Pandemic tracking data</p>
+            </div>
+            
+            <h3>🛍️ Practice Query 1: Customer Data</h3>
+            <p>Explore customer information from the TPCH dataset:</p>
+            <div class="code-block">
+                -- See top 10 customers
+                SELECT 
+                    C_CUSTKEY as customer_id,
+                    C_NAME as customer_name,
+                    C_MKTSEGMENT as market_segment,
+                    C_NATIONKEY as nation
+                FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER
+                LIMIT 10;
+            </div>
+            
+            <h3>📦 Practice Query 2: Order Analysis</h3>
+            <p>Analyze orders by status:</p>
+            <div class="code-block">
+                -- Count orders by status
+                SELECT 
+                    O_ORDERSTATUS as order_status,
+                    COUNT(*) as total_orders,
+                    SUM(O_TOTALPRICE) as total_revenue
+                FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.ORDERS
+                GROUP BY O_ORDERSTATUS
+                ORDER BY total_revenue DESC;
+            </div>
+            
+            <h3>💰 Practice Query 3: Revenue by Year</h3>
+            <p>Calculate annual revenue trends:</p>
+            <div class="code-block">
+                -- Revenue by year
+                SELECT 
+                    YEAR(O_ORDERDATE) as order_year,
+                    COUNT(*) as num_orders,
+                    ROUND(SUM(O_TOTALPRICE), 2) as total_revenue,
+                    ROUND(AVG(O_TOTALPRICE), 2) as avg_order_value
+                FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.ORDERS
+                GROUP BY order_year
+                ORDER BY order_year DESC;
+            </div>
+            
+            <h3>🌍 Practice Query 4: Geographic Analysis</h3>
+            <p>Join customers with nations:</p>
+            <div class="code-block">
+                -- Customers by country
+                SELECT 
+                    N.N_NAME as country,
+                    COUNT(C.C_CUSTKEY) as customer_count,
+                    R.R_NAME as region
+                FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER C
+                JOIN SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.NATION N
+                    ON C.C_NATIONKEY = N.N_NATIONKEY
+                JOIN SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.REGION R
+                    ON N.N_REGIONKEY = R.R_REGIONKEY
+                GROUP BY country, region
+                ORDER BY customer_count DESC
+                LIMIT 10;
+            </div>
+            
+            <h3>⛅ Practice Query 5: Weather Data</h3>
+            <p>Query global weather information:</p>
+            <div class="code-block">
+                -- Weather observations
+                SELECT 
+                    country,
+                    postal_code,
+                    date_valid_std,
+                    avg_temperature_air_2m_f,
+                    avg_wind_speed_10m_mph
+                FROM SNOWFLAKE_SAMPLE_DATA.WEATHER.HISTORY_DAY
+                WHERE country = 'US' 
+                    AND postal_code = '10001'
+                ORDER BY date_valid_std DESC
+                LIMIT 10;
+            </div>
+            
+            <h3>📊 Practice Query 6: Advanced Aggregation</h3>
+            <p>Find top selling products:</p>
+            <div class="code-block">
+                -- Top products by quantity sold
+                SELECT 
+                    L.L_PARTKEY as part_id,
+                    SUM(L.L_QUANTITY) as total_quantity,
+                    COUNT(DISTINCT L.L_ORDERKEY) as num_orders,
+                    ROUND(SUM(L.L_EXTENDEDPRICE), 2) as total_sales
+                FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.LINEITEM L
+                GROUP BY part_id
+                ORDER BY total_sales DESC
+                LIMIT 20;
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Remember:</strong> Make sure your warehouse is running before executing queries. Use a small warehouse (X-SMALL) for practice!
+            </div>
+            
+            <h3>🎓 Learning Exercises</h3>
+            <div class="card">
+                <p><strong>Exercise 1:</strong> Modify the customer query to show only customers from a specific market segment<br><br>
+                <strong>Exercise 2:</strong> Calculate the average order price per customer<br><br>
+                <strong>Exercise 3:</strong> Find which region has the highest total revenue<br><br>
+                <strong>Exercise 4:</strong> Count how many orders were placed each month in 1995</p>
+            </div>
+            
+            <h3>Quick Table Reference</h3>
+            <div class="code-block">
+                -- List all tables in TPCH_SF1
+                SHOW TABLES IN SNOWFLAKE_SAMPLE_DATA.TPCH_SF1;
+                
+                -- See structure of any table
+                DESCRIBE TABLE SNOWFLAKE_SAMPLE_DATA.TPCH_SF1.CUSTOMER;
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Pro Tip:</strong> Start with small LIMIT values (like 10 or 100) when exploring data to keep queries fast and cheap!
+            </div>
+        </div>
+        
+        <!-- SQL Guide Section -->
+        <div class="section" id="sql">
+            <h2>📝 SQL Basics in Snowflake</h2>
+            
+            <h3>Creating a Database</h3>
+            <div class="code-block">
+                CREATE DATABASE my_first_db;
+                USE DATABASE my_first_db;
+            </div>
+            
+            <h3>Creating a Table</h3>
+            <div class="code-block">
+                CREATE TABLE customers (
+                    id INT,
+                    name VARCHAR(100),
+                    email VARCHAR(100),
+                    signup_date DATE
+                );
+            </div>
+            
+            <h3>Inserting Data</h3>
+            <div class="code-block">
+                INSERT INTO customers VALUES
+                (1, 'John Doe', 'john@email.com', '2026-01-15'),
+                (2, 'Jane Smith', 'jane@email.com', '2026-01-20');
+            </div>
+            
+            <h3>Querying Data</h3>
+            <div class="code-block">
+                -- Select all records
+                SELECT * FROM customers;
+                
+                -- Filter results
+                SELECT name, email 
+                FROM customers 
+                WHERE signup_date > '2026-01-01';
+                
+                -- Count records
+                SELECT COUNT(*) FROM customers;
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Pro Tip:</strong> Use CTRL+Enter (CMD+Enter on Mac) to run queries in Snowsight!
+            </div>
+            
+            <h3>Common SQL Commands</h3>
+            <div class="card">
+                <p><strong>SELECT:</strong> Retrieve data<br>
+                <strong>INSERT:</strong> Add new data<br>
+                <strong>UPDATE:</strong> Modify existing data<br>
+                <strong>DELETE:</strong> Remove data<br>
+                <strong>CREATE:</strong> Make new objects<br>
+                <strong>DROP:</strong> Delete objects</p>
+            </div>
+        </div>
+        
+        <!-- Data Types Section -->
+        <div class="section" id="datatypes">
+            <h2>📊 Data Types Guide</h2>
+            
+            <p>Understanding data types is crucial for creating tables and working with data efficiently.</p>
+            
+            <h3>🔤 String/Text Types</h3>
+            
+            <div class="card">
+                <p><strong>VARCHAR(n)</strong> or <strong>STRING</strong></p>
+                <p>Stores text data of any length</p>
+            </div>
+            <div class="code-block">
+                -- Creating columns with VARCHAR
+                CREATE TABLE users (
+                    username VARCHAR(50),
+                    email VARCHAR(100),
+                    bio STRING  -- No limit needed
+                );
+                
+                -- Examples
+                INSERT INTO users VALUES
+                ('john_doe', 'john@email.com', 'Software developer');
+            </div>
+            
+            <div class="card">
+                <p><strong>CHAR(n)</strong></p>
+                <p>Fixed-length text (less common, use VARCHAR instead)</p>
+            </div>
+            
+            <h3>🔢 Numeric Types</h3>
+            
+            <div class="card">
+                <p><strong>NUMBER(precision, scale)</strong></p>
+                <p>Stores integers and decimals. Most versatile numeric type.</p>
+                <p>Precision = total digits, Scale = digits after decimal</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE products (
+                    product_id NUMBER(10, 0),      -- Integer, up to 10 digits
+                    price NUMBER(10, 2),           -- Price: 99999999.99
+                    weight NUMBER(8, 3),           -- Weight: 12345.678
+                    quantity NUMBER                 -- Default: NUMBER(38, 0)
+                );
+                
+                INSERT INTO products VALUES
+                (1001, 29.99, 1.250, 100);
+            </div>
+            
+            <div class="card">
+                <p><strong>INTEGER / INT</strong></p>
+                <p>Whole numbers only (alias for NUMBER(38,0))</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE inventory (
+                    item_id INTEGER,
+                    stock_count INT
+                );
+            </div>
+            
+            <div class="card">
+                <p><strong>FLOAT / DOUBLE</strong></p>
+                <p>Approximate decimal numbers (scientific calculations)</p>
+            </div>
+            
+            <h3>📅 Date and Time Types</h3>
+            
+            <div class="card">
+                <p><strong>DATE</strong></p>
+                <p>Stores year, month, day (YYYY-MM-DD)</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE events (
+                    event_date DATE
+                );
+                
+                INSERT INTO events VALUES
+                ('2026-01-21'),
+                (CURRENT_DATE()),
+                (TO_DATE('01/21/2026', 'MM/DD/YYYY'));
+            </div>
+            
+            <div class="card">
+                <p><strong>TIME</strong></p>
+                <p>Stores hours, minutes, seconds (HH:MI:SS)</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE schedules (
+                    start_time TIME
+                );
+                
+                INSERT INTO schedules VALUES
+                ('14:30:00'),
+                (CURRENT_TIME());
+            </div>
+            
+            <div class="card">
+                <p><strong>TIMESTAMP</strong></p>
+                <p>Stores date + time (most commonly used for timestamps)</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE logs (
+                    created_at TIMESTAMP,
+                    updated_at TIMESTAMP_NTZ,      -- No timezone
+                    logged_at TIMESTAMP_LTZ,       -- Local timezone
+                    server_time TIMESTAMP_TZ       -- With timezone
+                );
+                
+                INSERT INTO logs VALUES
+                (CURRENT_TIMESTAMP(), 
+                 '2026-01-21 14:30:00',
+                 CURRENT_TIMESTAMP(),
+                 CURRENT_TIMESTAMP());
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Best Practice:</strong> Use TIMESTAMP_NTZ for most cases - it's timezone-agnostic and simplest to work with.
+            </div>
+            
+            <h3>✅ Boolean Type</h3>
+            
+            <div class="card">
+                <p><strong>BOOLEAN</strong></p>
+                <p>TRUE or FALSE values</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE settings (
+                    feature_name VARCHAR(50),
+                    is_enabled BOOLEAN
+                );
+                
+                INSERT INTO settings VALUES
+                ('dark_mode', TRUE),
+                ('notifications', FALSE),
+                ('auto_save', NULL);  -- Can be NULL
+            </div>
+            
+            <h3>🎨 Semi-Structured Types</h3>
+            
+            <div class="card">
+                <p><strong>VARIANT</strong></p>
+                <p>Stores JSON, XML, or any semi-structured data. Very powerful!</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE api_responses (
+                    response_id INT,
+                    data VARIANT
+                );
+                
+                -- Insert JSON data
+                INSERT INTO api_responses VALUES
+                (1, PARSE_JSON('{"name":"John","age":30,"active":true}'));
+                
+                -- Query JSON fields
+                SELECT 
+                    data:name::STRING as name,
+                    data:age::INT as age,
+                    data:active::BOOLEAN as active
+                FROM api_responses;
+            </div>
+            
+            <div class="card">
+                <p><strong>OBJECT</strong></p>
+                <p>Stores JSON objects specifically</p>
+            </div>
+            
+            <div class="card">
+                <p><strong>ARRAY</strong></p>
+                <p>Stores JSON arrays</p>
+            </div>
+            <div class="code-block">
+                CREATE TABLE collections (
+                    tags ARRAY,
+                    scores ARRAY
+                );
+                
+                INSERT INTO collections VALUES
+                (ARRAY_CONSTRUCT('tech', 'news', 'blog'),
+                 ARRAY_CONSTRUCT(95, 87, 92));
+            </div>
+            
+            <h3>💾 Binary Type</h3>
+            
+            <div class="card">
+                <p><strong>BINARY</strong></p>
+                <p>Stores binary data (files, images as bytes)</p>
+            </div>
+            
+            <h3>🔄 Type Conversion</h3>
+            <div class="code-block">
+                -- Convert between types
+                SELECT 
+                    CAST('123' AS INTEGER),
+                    '123'::INTEGER,                  -- Shorthand
+                    TO_NUMBER('123.45'),
+                    TO_DATE('2026-01-21'),
+                    TO_TIMESTAMP('2026-01-21 14:30:00'),
+                    TO_VARCHAR(12345),
+                    TO_BOOLEAN('true');
+                
+                -- Safe conversion (returns NULL if fails)
+                SELECT 
+                    TRY_CAST('abc' AS INTEGER),      -- Returns NULL
+                    TRY_TO_NUMBER('not_a_number');   -- Returns NULL
+            </div>
+            
+            <h3>📏 Type Comparison Table</h3>
+            <div class="card">
+                <p><strong>For Names/Emails:</strong> VARCHAR or STRING<br>
+                <strong>For Prices:</strong> NUMBER(10,2)<br>
+                <strong>For Counts:</strong> INTEGER<br>
+                <strong>For Dates:</strong> DATE<br>
+                <strong>For Timestamps:</strong> TIMESTAMP_NTZ<br>
+                <strong>For JSON Data:</strong> VARIANT<br>
+                <strong>For Yes/No:</strong> BOOLEAN</p>
+            </div>
+            
+            <h3>💡 Common Use Cases</h3>
+            <div class="code-block">
+                -- E-commerce table example
+                CREATE TABLE orders (
+                    order_id INTEGER,
+                    customer_email VARCHAR(100),
+                    order_date DATE,
+                    order_timestamp TIMESTAMP_NTZ,
+                    total_amount NUMBER(10, 2),
+                    is_paid BOOLEAN,
+                    items VARIANT,                    -- JSON array of items
+                    metadata VARIANT                  -- Additional JSON data
+                );
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Important:</strong> Choose the right data type from the start. Changing types later requires recreating tables or using ALTER commands.
+            </div>
+        </div>
+        
+        <!-- Roles & Permissions Section -->
+        <div class="section" id="roles">
+            <h2>👥 Roles & Permissions</h2>
+            
+            <p>Roles control what you can do in Snowflake. Think of them as different levels of access.</p>
+            
+            <div class="tip-box">
+                💡 <strong>Key Concept:</strong> Always use the least powerful role needed for your task. Don't stay in ACCOUNTADMIN!
+            </div>
+            
+            <h3>🔑 Main System Roles</h3>
+            
+            <div class="card">
+                <h3>ACCOUNTADMIN</h3>
+                <p><strong>Power Level:</strong> ⭐⭐⭐⭐⭐ (Highest)</p>
+                <p><strong>What it does:</strong> Complete control over the entire account</p>
+                <p><strong>Can do:</strong></p>
+                <ul>
+                    <li>Manage users and roles</li>
+                    <li>View and control billing</li>
+                    <li>Create/drop databases and warehouses</li>
+                    <li>Everything SYSADMIN can do</li>
+                    <li>Change account settings</li>
+                </ul>
+                <p><strong>When to use:</strong> Account setup, user management, billing review</p>
+                <p><strong>⚠️ Warning:</strong> Don't use for daily work! Very risky.</p>
+            </div>
+            <div class="code-block">
+                -- Switch to ACCOUNTADMIN
+                USE ROLE ACCOUNTADMIN;
+                
+                -- Create a new user
+                CREATE USER jane_doe 
+                PASSWORD = 'StrongPassword123!'
+                DEFAULT_ROLE = SYSADMIN;
+            </div>
+            
+            <div class="card">
+                <h3>SYSADMIN</h3>
+                <p><strong>Power Level:</strong> ⭐⭐⭐⭐ (High)</p>
+                <p><strong>What it does:</strong> Manage databases and warehouses</p>
+                <p><strong>Can do:</strong></p>
+                <ul>
+                    <li>Create databases, schemas, tables</li>
+                    <li>Create and manage warehouses</li>
+                    <li>Grant privileges to other roles</li>
+                    <li>Cannot manage users or billing</li>
+                </ul>
+                <p><strong>When to use:</strong> Creating databases, setting up data structures</p>
+                <p><strong>✓ Recommended:</strong> Use this for most admin work</p>
+            </div>
+            <div class="code-block">
+                -- Switch to SYSADMIN
+                USE ROLE SYSADMIN;
+                
+                -- Create database and warehouse
+                CREATE DATABASE analytics_db;
+                CREATE WAREHOUSE analytics_wh
+                WITH WAREHOUSE_SIZE = 'SMALL';
+            </div>
+            
+            <div class="card">
+                <h3>SECURITYADMIN</h3>
+                <p><strong>Power Level:</strong> ⭐⭐⭐</p>
+                <p><strong>What it does:</strong> Manage users and roles (but not account settings)</p>
+                <p><strong>Can do:</strong></p>
+                <ul>
+                    <li>Create and manage roles</li>
+                    <li>Grant roles to users</li>
+                    <li>Manage privileges</li>
+                </ul>
+                <p><strong>When to use:</strong> Setting up permissions, creating custom roles</p>
+            </div>
+            
+            <div class="card">
+                <h3>PUBLIC</h3>
+                <p><strong>Power Level:</strong> ⭐ (Lowest)</p>
+                <p><strong>What it does:</strong> Basic access granted to all users</p>
+                <p><strong>Can do:</strong></p>
+                <ul>
+                    <li>Access objects granted to PUBLIC</li>
+                    <li>Very limited permissions</li>
+                </ul>
+                <p><strong>When to use:</strong> Default minimal access for all users</p>
+            </div>
+            
+            <h3>🎯 Role Hierarchy</h3>
+            <div class="code-block">
+                ACCOUNTADMIN (Top - owns everything)
+                    └── SECURITYADMIN (Manages users/roles)
+                    └── SYSADMIN (Manages databases/warehouses)
+                        └── Custom Roles (Your created roles)
+                            └── PUBLIC (Bottom - everyone has this)
+            </div>
+            
+            <h3>📝 Creating Custom Roles</h3>
+            <p>For teams, create specific roles with only needed permissions:</p>
+            <div class="code-block">
+                -- Switch to SECURITYADMIN to create roles
+                USE ROLE SECURITYADMIN;
+                
+                -- Create a role for analysts
+                CREATE ROLE analyst_role;
+                
+                -- Grant warehouse usage
+                GRANT USAGE ON WAREHOUSE compute_wh 
+                TO ROLE analyst_role;
+                
+                -- Grant database access
+                GRANT USAGE ON DATABASE analytics_db 
+                TO ROLE analyst_role;
+                
+                -- Grant schema access
+                GRANT USAGE ON SCHEMA analytics_db.public 
+                TO ROLE analyst_role;
+                
+                -- Grant SELECT on all tables
+                GRANT SELECT ON ALL TABLES 
+                IN SCHEMA analytics_db.public 
+                TO ROLE analyst_role;
+                
+                -- Assign role to a user
+                GRANT ROLE analyst_role TO USER jane_doe;
+            </div>
+            
+            <h3>🔍 Checking Your Current Role</h3>
+            <div class="code-block">
+                -- See your current role
+                SELECT CURRENT_ROLE();
+                
+                -- See all your available roles
+                SHOW ROLES;
+                
+                -- See what roles you have
+                SELECT * FROM TABLE(RESULT_SCAN(LAST_QUERY_ID()));
+            </div>
+            
+            <h3>🔄 Switching Roles</h3>
+            <div class="code-block">
+                -- Switch to different role
+                USE ROLE SYSADMIN;
+                
+                -- Or in same statement
+                USE ROLE ACCOUNTADMIN;
+                CREATE DATABASE my_db;
+                USE ROLE SYSADMIN;  -- Switch back immediately
+            </div>
+            
+            <h3>⚡ Common Role Use Cases</h3>
+            <div class="card">
+                <p><strong>Setting up account initially:</strong> ACCOUNTADMIN<br><br>
+                <strong>Creating databases/warehouses:</strong> SYSADMIN<br><br>
+                <strong>Creating users and roles:</strong> SECURITYADMIN<br><br>
+                <strong>Daily analytics work:</strong> Custom analyst role<br><br>
+                <strong>Running queries:</strong> Role with SELECT privileges</p>
+            </div>
+            
+            <h3>🛡️ Security Best Practices</h3>
+            <ul>
+                <li>✓ Use SYSADMIN for daily admin work, not ACCOUNTADMIN</li>
+                <li>✓ Create custom roles for different teams</li>
+                <li>✓ Grant minimum necessary privileges</li>
+                <li>✓ Regularly review who has which roles</li>
+                <li>✗ Don't give everyone ACCOUNTADMIN</li>
+                <li>✗ Don't stay logged in as ACCOUNTADMIN</li>
+            </ul>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Security Tip:</strong> Only 2-3 trusted people should have ACCOUNTADMIN. Everyone else should use SYSADMIN or custom roles.
+            </div>
+            
+            <h3>📋 Example: Setting Up a Data Team</h3>
+            <div class="code-block">
+                -- As SECURITYADMIN, create team roles
+                USE ROLE SECURITYADMIN;
+                
+                -- Analysts: Read-only access
+                CREATE ROLE data_analyst;
+                GRANT USAGE ON WAREHOUSE analytics_wh TO ROLE data_analyst;
+                GRANT USAGE ON DATABASE prod_db TO ROLE data_analyst;
+                GRANT SELECT ON ALL TABLES IN SCHEMA prod_db.public 
+                TO ROLE data_analyst;
+                
+                -- Engineers: Can modify data
+                CREATE ROLE data_engineer;
+                GRANT USAGE ON WAREHOUSE etl_wh TO ROLE data_engineer;
+                GRANT ALL ON DATABASE staging_db TO ROLE data_engineer;
+                
+                -- Assign to users
+                GRANT ROLE data_analyst TO USER analyst1;
+                GRANT ROLE data_engineer TO USER engineer1;
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Remember:</strong> You can have multiple roles, but only one is active at a time. Switch roles based on what task you're doing!
+            </div>
+        </div>
+        
+        <!-- Warehouses Section -->
+        <div class="section" id="warehouse">
+            <h2>🏭 Virtual Warehouses</h2>
+            
+            <p>Virtual warehouses are Snowflake's compute engines. They process your queries and load data.</p>
+            
+            <h3>Key Concepts:</h3>
+            <ul>
+                <li><strong>Size:</strong> X-Small to 6X-Large (affects speed and cost)</li>
+                <li><strong>Auto-Suspend:</strong> Pauses when not in use (saves money!)</li>
+                <li><strong>Auto-Resume:</strong> Starts automatically when needed</li>
+                <li><strong>Multi-Cluster:</strong> Scales out for heavy workloads</li>
+            </ul>
+            
+            <h3>Creating a Warehouse</h3>
+            <div class="code-block">
+                CREATE WAREHOUSE my_warehouse
+                WITH WAREHOUSE_SIZE = 'X-SMALL'
+                AUTO_SUSPEND = 60
+                AUTO_RESUME = TRUE;
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Cost Tip:</strong> Always set AUTO_SUSPEND to avoid unnecessary charges. Warehouses bill per second!
+            </div>
+            
+            <h3>Warehouse Sizes & Use Cases</h3>
+            <div class="card">
+                <p><strong>X-Small:</strong> Testing, small queries<br>
+                <strong>Small:</strong> Development work<br>
+                <strong>Medium:</strong> Regular analytics<br>
+                <strong>Large+:</strong> Heavy processing, complex queries</p>
+            </div>
+            
+            <h3>Managing Warehouses</h3>
+            <div class="code-block">
+                -- Start a warehouse
+                ALTER WAREHOUSE my_warehouse RESUME;
+                
+                -- Pause a warehouse
+                ALTER WAREHOUSE my_warehouse SUSPEND;
+                
+                -- Resize a warehouse
+                ALTER WAREHOUSE my_warehouse 
+                SET WAREHOUSE_SIZE = 'MEDIUM';
+            </div>
+        </div>
+        
+        <!-- Time Travel Section -->
+        <div class="section" id="timetravel">
+            <h2>⏰ Time Travel & Fail-Safe</h2>
+            
+            <p>One of Snowflake's most powerful features - the ability to access and restore historical data!</p>
+            
+            <div class="tip-box">
+                💡 <strong>Amazing Feature:</strong> Accidentally deleted data? Updated the wrong rows? Time Travel can save you!
+            </div>
+            
+            <h3>🕐 What is Time Travel?</h3>
+            <p>Time Travel lets you query, clone, and restore data from the past. Think of it as an "undo" button for your database.</p>
+            
+            <div class="card">
+                <p><strong>Standard Edition:</strong> 1 day of Time Travel<br>
+                <strong>Enterprise Edition:</strong> Up to 90 days<br>
+                <strong>Default:</strong> 1 day for all accounts</p>
+            </div>
+            
+            <h3>📖 Query Historical Data</h3>
+            <p>See what your data looked like at a specific time:</p>
+            <div class="code-block">
+                -- Query data as it was 1 hour ago
+                SELECT * FROM orders 
+                AT(OFFSET => -60*60);  -- 60 seconds * 60 minutes
+                
+                -- Query data as of specific timestamp
+                SELECT * FROM orders 
+                AT(TIMESTAMP => '2026-01-21 10:00:00'::TIMESTAMP);
+                
+                -- Query before a specific statement
+                SELECT * FROM orders 
+                BEFORE(STATEMENT => '01a9e15f-0000-1234-5678-90abcdef1234');
+            </div>
+            
+            <h3>🔄 Restore Deleted Tables</h3>
+            <p>Recover a table you accidentally dropped:</p>
+            <div class="code-block">
+                -- Oops! Dropped the wrong table
+                DROP TABLE customers;
+                
+                -- No problem! Restore it
+                UNDROP TABLE customers;
+                
+                -- Works for databases and schemas too
+                UNDROP DATABASE my_database;
+                UNDROP SCHEMA my_schema;
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Time Limit:</strong> UNDROP only works within the Time Travel retention period (1-90 days depending on edition).
+            </div>
+            
+            <h3>↩️ Restore Data After Wrong Update</h3>
+            <p>Fix data after a bad UPDATE or DELETE:</p>
+            <div class="code-block">
+                -- Oh no! Accidentally updated all prices to 0
+                UPDATE products SET price = 0;
+                
+                -- Method 1: Create new table from historical data
+                CREATE TABLE products_restored AS
+                SELECT * FROM products 
+                AT(OFFSET => -60*5);  -- 5 minutes ago
+                
+                -- Method 2: Insert historical data back
+                INSERT INTO products
+                SELECT * FROM products 
+                BEFORE(STATEMENT => '01a9e15f-0000-1234');
+                
+                -- Method 3: Replace entire table
+                CREATE OR REPLACE TABLE products AS
+                SELECT * FROM products 
+                AT(TIMESTAMP => '2026-01-21 14:00:00'::TIMESTAMP);
+            </div>
+            
+            <h3>📋 Clone Tables from History</h3>
+            <p>Create instant copies of historical data (zero-copy clone):</p>
+            <div class="code-block">
+                -- Clone table as it was yesterday
+                CREATE TABLE orders_backup CLONE orders 
+                AT(OFFSET => -60*60*24);
+                
+                -- Clone before a specific change
+                CREATE TABLE customers_safe CLONE customers 
+                BEFORE(STATEMENT => '01a9e15f-0000-1234');
+                
+                -- Clone entire database
+                CREATE DATABASE prod_backup CLONE production_db
+                AT(TIMESTAMP => '2026-01-20 23:59:59'::TIMESTAMP);
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Zero-Copy Magic:</strong> Clones don't duplicate storage initially - they only store differences. Super fast and efficient!
+            </div>
+            
+            <h3>🔍 Finding Query IDs for Time Travel</h3>
+            <div class="code-block">
+                -- View your recent query history
+                SELECT 
+                    query_id,
+                    query_text,
+                    start_time,
+                    end_time
+                FROM TABLE(INFORMATION_SCHEMA.QUERY_HISTORY())
+                WHERE query_type = 'UPDATE' 
+                   OR query_type = 'DELETE'
+                ORDER BY start_time DESC
+                LIMIT 10;
+                
+                -- Use the query_id in BEFORE(STATEMENT => ...)
+            </div>
+            
+            <h3>⚙️ Configure Time Travel Retention</h3>
+            <div class="code-block">
+                -- Set retention when creating table (Enterprise only)
+                CREATE TABLE important_data (
+                    id INT,
+                    value VARCHAR
+                ) DATA_RETENTION_TIME_IN_DAYS = 90;
+                
+                -- Change retention on existing table
+                ALTER TABLE customers 
+                SET DATA_RETENTION_TIME_IN_DAYS = 7;
+                
+                -- Check current retention
+                SHOW TABLES LIKE 'customers';
+            </div>
+            
+            <h3>🛡️ Fail-Safe: The Last Resort</h3>
+            <p>After Time Travel period ends, data enters Fail-Safe (additional 7 days).</p>
+            
+            <div class="card">
+                <p><strong>Fail-Safe Period:</strong> 7 days (automatic)<br>
+                <strong>Purpose:</strong> Disaster recovery only<br>
+                <strong>Access:</strong> Must contact Snowflake Support<br>
+                <strong>Cost:</strong> Requires support engagement</p>
+            </div>
+            
+            <h3>📊 Complete Timeline</h3>
+            <div class="code-block">
+                Day 0: Data created/modified
+                ↓
+                Days 1-90: TIME TRAVEL (you can query/restore)
+                ↓
+                Days 91-97: FAIL-SAFE (Snowflake Support only)
+                ↓
+                Day 98+: Data permanently deleted
+            </div>
+            
+            <h3>💰 Storage Costs</h3>
+            <p>Time Travel and Fail-Safe data count toward storage costs:</p>
+            <div class="code-block">
+                -- View Time Travel storage usage
+                SELECT * FROM SNOWFLAKE.ACCOUNT_USAGE.TABLE_STORAGE_METRICS
+                WHERE TABLE_NAME = 'ORDERS'
+                ORDER BY ACTIVE_BYTES DESC;
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Cost Tip:</strong> Longer Time Travel = more storage costs. Use 90 days only for critical tables.
+            </div>
+            
+            <h3>🎯 Common Use Cases</h3>
+            <div class="card">
+                <p><strong>Accidental DELETE:</strong> Restore with AT/BEFORE<br><br>
+                <strong>Bad UPDATE:</strong> Clone historical version<br><br>
+                <strong>Dropped TABLE:</strong> UNDROP immediately<br><br>
+                <strong>Testing Changes:</strong> Query before/after comparison<br><br>
+                <strong>Auditing:</strong> See what data looked like historically<br><br>
+                <strong>Point-in-time Backup:</strong> Clone database nightly</p>
+            </div>
+            
+            <h3>📝 Best Practices</h3>
+            <ul>
+                <li>✓ Test UNDROP and Time Travel queries in development first</li>
+                <li>✓ Document important query_ids after major changes</li>
+                <li>✓ Use shorter retention (1-7 days) for non-critical tables</li>
+                <li>✓ Create clones before major updates as safety net</li>
+                <li>✓ Monitor Time Travel storage usage regularly</li>
+                <li>✗ Don't rely on Time Travel as your only backup strategy</li>
+            </ul>
+            
+            <h3>🚀 Real-World Example</h3>
+            <div class="code-block">
+                -- Friday 5pm: Major data update goes wrong
+                UPDATE customer_orders 
+                SET status = 'cancelled' 
+                WHERE order_date > '2026-01-01';
+                -- Oops! Should have been order_date < '2026-01-01'
+                
+                -- Friday 5:05pm: Realize the mistake
+                -- Get the query ID
+                SELECT query_id, query_text, start_time
+                FROM TABLE(INFORMATION_SCHEMA.QUERY_HISTORY())
+                WHERE query_text LIKE '%UPDATE customer_orders%'
+                ORDER BY start_time DESC LIMIT 1;
+                -- Returns: query_id = '01a9e15f-0000-1234'
+                
+                -- Restore data to state before bad update
+                CREATE OR REPLACE TABLE customer_orders AS
+                SELECT * FROM customer_orders 
+                BEFORE(STATEMENT => '01a9e15f-0000-1234');
+                
+                -- Crisis averted! ✅
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Pro Tip:</strong> Before running risky UPDATE/DELETE statements, note the current timestamp. Makes recovery much easier!
+            </div>
+        </div>
+        
+        <!-- Worksheets Tips Section -->
+        <div class="section" id="worksheets">
+            <h2>📝 Worksheets Tips & Tricks</h2>
+            
+            <p>Master Snowsight's worksheet interface to work faster and smarter!</p>
+            
+            <h3>⌨️ Keyboard Shortcuts</h3>
+            
+            <div class="card">
+                <p><strong>Essential Shortcuts:</strong></p>
+            </div>
+            <div class="code-block">
+                Windows/Linux          Mac
+                ─────────────────────────────────────
+                Ctrl + Enter           Cmd + Enter     Run selected/current query
+                Ctrl + Shift + Enter   Cmd + Shift + Enter   Run all queries
+                Ctrl + /               Cmd + /         Comment/uncomment line
+                Ctrl + D               Cmd + D         Duplicate line
+                Ctrl + F               Cmd + F         Find in worksheet
+                Ctrl + H               Cmd + H         Find and replace
+                Ctrl + Z               Cmd + Z         Undo
+                Ctrl + Y               Cmd + Y         Redo
+                Ctrl + S               Cmd + S         Save worksheet
+                Ctrl + K               Cmd + K         Format SQL
+                Tab                    Tab             Indent
+                Shift + Tab            Shift + Tab     Un-indent
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Power User Tip:</strong> Select specific SQL and press Ctrl+Enter to run only that portion. No need to run the entire worksheet!
+            </div>
+            
+            <h3>💾 Saving & Organizing Worksheets</h3>
+            
+            <div class="code-block">
+                -- Auto-save is enabled by default
+                -- Your worksheets are saved automatically every few seconds
+            </div>
+            
+            <p><strong>Creating Worksheets:</strong></p>
+            <ul>
+                <li>Click "+" button or Ctrl+N (Cmd+N on Mac)</li>
+                <li>Name your worksheet (click title at top)</li>
+                <li>Add to folders for organization</li>
+            </ul>
+            
+            <p><strong>Organizing Worksheets:</strong></p>
+            <div class="code-block">
+                Folders Structure Example:
+                📁 Daily Queries
+                   └── Morning Report.sql
+                   └── Customer Analysis.sql
+                📁 ETL Scripts
+                   └── Load Products.sql
+                   └── Transform Orders.sql
+                📁 Archive
+                   └── Old Queries.sql
+            </div>
+            
+            <h3>📤 Sharing Worksheets</h3>
+            
+            <p><strong>Method 1: Share Link (Recommended)</strong></p>
+            <ul>
+                <li>Click "Share" button (top right)</li>
+                <li>Choose permissions: View Only or Can Edit</li>
+                <li>Copy link and send to teammates</li>
+            </ul>
+            
+            <p><strong>Method 2: Export Worksheet</strong></p>
+            <ul>
+                <li>Click "⋮" menu → "Export"</li>
+                <li>Saves as .sql file to download</li>
+                <li>Share file via email or Slack</li>
+            </ul>
+            
+            <div class="card">
+                <p><strong>Sharing Permissions:</strong><br>
+                <strong>View Only:</strong> Can see query and results, cannot edit<br>
+                <strong>Can Edit:</strong> Full access to modify and run queries</p>
+            </div>
+            
+            <h3>📊 Exporting Query Results</h3>
+            
+            <p><strong>Export Options:</strong></p>
+            <div class="code-block">
+                After running a query:
+                1. Click "↓" download button in results panel
+                2. Choose format:
+                   • CSV (.csv) - Best for Excel/spreadsheets
+                   • TSV (.tsv) - Tab-separated values
+                   • JSON (.json) - For APIs/programming
+                
+                Limits:
+                • UI export: Up to 100,000 rows
+                • For larger exports, use COPY INTO or SnowSQL
+            </div>
+            
+            <p><strong>Export Large Results (Beyond 100k rows):</strong></p>
+            <div class="code-block">
+                -- Export to S3, Azure, or GCS
+                COPY INTO @my_stage/results.csv
+                FROM (
+                    SELECT * FROM huge_table
+                )
+                FILE_FORMAT = (TYPE = 'CSV' HEADER = TRUE);
+                
+                -- Then download from cloud storage
+            </div>
+            
+            <h3>🎨 Customizing Your Workspace</h3>
+            
+            <p><strong>Theme:</strong></p>
+            <ul>
+                <li>Light mode or Dark mode (Settings → Appearance)</li>
+                <li>Automatic based on system preferences</li>
+            </ul>
+            
+            <p><strong>Context Settings (Top bar):</strong></p>
+            <div class="code-block">
+                Set defaults to avoid typing them every time:
+                • Role: Choose your working role
+                • Warehouse: Select default warehouse
+                • Database: Pick active database
+                • Schema: Set current schema
+            </div>
+            
+            <h3>🔍 Advanced Features</h3>
+            
+            <div class="card">
+                <h3>Query History Panel</h3>
+                <p>See all your past queries with results</p>
+                <ul>
+                    <li>Click clock icon (left sidebar)</li>
+                    <li>Filter by date, status, or text</li>
+                    <li>Re-run any previous query</li>
+                    <li>Copy query text back to worksheet</li>
+                </ul>
+            </div>
+            
+            <div class="card">
+                <h3>Results Panel Features</h3>
+                <ul>
+                    <li><strong>Pagination:</strong> Navigate through large results</li>
+                    <li><strong>Sorting:</strong> Click column headers to sort</li>
+                    <li><strong>Filtering:</strong> Filter rows by column values</li>
+                    <li><strong>Charts:</strong> Visualize data with built-in charts</li>
+                </ul>
+            </div>
+            
+            <h3>📈 Creating Quick Charts</h3>
+            <div class="code-block">
+                -- Run a query
+                SELECT 
+                    DATE_TRUNC('month', order_date) as month,
+                    COUNT(*) as total_orders,
+                    SUM(amount) as revenue
+                FROM orders
+                GROUP BY month
+                ORDER BY month;
+                
+                -- Then:
+                1. Click "Chart" tab in results
+                2. Choose chart type (Bar, Line, Scatter, etc.)
+                3. Set X-axis and Y-axis columns
+                4. Customize colors and labels
+            </div>
+            
+            <h3>💡 Pro Productivity Tips</h3>
+            
+            <div class="card">
+                <p><strong>1. Use Comments for Documentation</strong></p>
+                <div class="code-block">
+                -- Single line comment
+                
+                /*
+                Multi-line comment
+                for longer explanations
+                */
+                
+                SELECT * FROM orders;  -- Inline comment
+                </div>
+            </div>
+            
+            <div class="card">
+                <p><strong>2. Separate Multiple Queries with Semicolons</strong></p>
+                <div class="code-block">
+                SELECT COUNT(*) FROM customers;
+                
+                SELECT * FROM orders LIMIT 10;
+                
+                SELECT SUM(amount) FROM payments;
+                -- Run all with Ctrl+Shift+Enter
+                -- Or select one and run with Ctrl+Enter
+                </div>
+            </div>
+            
+            <div class="card">
+                <p><strong>3. Use Query Tags for Tracking</strong></p>
+                <div class="code-block">
+                -- Add context to your queries
+                ALTER SESSION SET QUERY_TAG = 'weekly_sales_report';
+                
+                SELECT * FROM sales WHERE week = 3;
+                
+                -- Later, find all queries with this tag
+                SELECT * FROM TABLE(INFORMATION_SCHEMA.QUERY_HISTORY())
+                WHERE query_tag = 'weekly_sales_report';
+                </div>
+            </div>
+            
+            <div class="card">
+                <p><strong>4. Create Query Snippets Library</strong></p>
+                <div class="code-block">
+                -- Keep commonly used queries in a "Snippets" folder
+                -- Examples:
+                
+                -- Template: Basic SELECT
+                SELECT * FROM [TABLE_NAME] LIMIT 100;
+                
+                -- Template: Date Range Filter
+                SELECT * FROM [TABLE_NAME]
+                WHERE [DATE_COLUMN] BETWEEN '2026-01-01' AND '2026-01-31';
+                
+                -- Template: Aggregate by Month
+                SELECT 
+                    DATE_TRUNC('month', [DATE_COLUMN]) as month,
+                    COUNT(*) as count
+                FROM [TABLE_NAME]
+                GROUP BY month
+                ORDER BY month DESC;
+                </div>
+            </div>
+            
+            <h3>🚫 Common Worksheet Mistakes</h3>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Watch Out For:</strong>
+                <ul>
+                    <li>Running SELECT * on huge tables without LIMIT</li>
+                    <li>Forgetting to select the right warehouse/database</li>
+                    <li>Not saving important queries before closing</li>
+                    <li>Sharing worksheets with sensitive data</li>
+                    <li>Leaving expensive warehouses running after work</li>
+                </ul>
+            </div>
+            
+            <h3>⚡ Speed Hacks</h3>
+            <div class="code-block">
+                -- Use LIMIT while developing queries
+                SELECT * FROM huge_table LIMIT 10;  -- Fast preview
+                
+                -- Use SAMPLE for large tables
+                SELECT * FROM huge_table SAMPLE (1);  -- 1% sample
+                
+                -- Use DESCRIBE to see structure without reading data
+                DESCRIBE TABLE customers;
+                
+                -- Use COUNT(*) first to check size
+                SELECT COUNT(*) FROM potential_big_table;
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Final Tip:</strong> Name your worksheets descriptively! "Customer Analysis - Jan 2026" is better than "Untitled Worksheet 47"
+            </div>
+            
+            <h3>📋 Worksheet Checklist</h3>
+            <div class="card">
+                <p>✓ Set context (Role, Warehouse, Database)<br>
+                ✓ Name your worksheet<br>
+                ✓ Add comments to explain complex queries<br>
+                ✓ Use LIMIT when testing<br>
+                ✓ Save before closing<br>
+                ✓ Organize into folders<br>
+                ✓ Export results before closing (if needed)<br>
+                ✓ Suspend warehouse when done</p>
+            </div>
+        </div>
+        
+        <!-- Data Loading Section -->
+        <div class="section" id="data">
+            <h2>📤 Loading Data</h2>
+            
+            <h3>Method 1: Using the UI (Easiest)</h3>
+            <p>1. Navigate to "Data" → "Databases"<br>
+            2. Click on your database and schema<br>
+            3. Click "Create" → "Table" → "From File"<br>
+            4. Upload your CSV/JSON/Parquet file<br>
+            5. Preview and confirm</p>
+            
+            <h3>Method 2: COPY INTO Command</h3>
+            <div class="code-block">
+                -- Create a stage (temporary storage)
+                CREATE STAGE my_stage;
+                
+                -- Upload file to stage (via UI or SnowSQL)
+                
+                -- Copy data into table
+                COPY INTO customers
+                FROM @my_stage/customers.csv
+                FILE_FORMAT = (TYPE = 'CSV' 
+                               SKIP_HEADER = 1);
+            </div>
+            
+            <h3>Method 3: Snowpipe (Automatic)</h3>
+            <p>Snowpipe automatically loads data as files arrive in cloud storage (S3, Azure Blob, GCS).</p>
+            
+            <div class="tip-box">
+                💡 <strong>Beginner Tip:</strong> Start with the UI method - it's the simplest way to get data into Snowflake!
+            </div>
+            
+            <h3>Supported File Formats</h3>
+            <div class="card">
+                <p>✓ CSV<br>
+                ✓ JSON<br>
+                ✓ Parquet<br>
+                ✓ Avro<br>
+                ✓ ORC<br>
+                ✓ XML</p>
+            </div>
+        </div>
+        
+        <!-- Common Errors Section -->
+        <div class="section" id="errors">
+            <h2>🔧 Common Errors & Solutions</h2>
+            
+            <p>Don't worry - everyone gets errors! Here's how to fix the most common ones.</p>
+            
+            <div class="tip-box">
+                💡 <strong>Quick Tip:</strong> Read error messages carefully - they usually tell you exactly what's wrong!
+            </div>
+            
+            <h3>❌ Error 1: No Active Warehouse</h3>
+            <div class="code-block">
+                SQL compilation error: No active warehouse selected
+            </div>
+            <p><strong>What it means:</strong> You haven't selected a warehouse to run your query.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Select a warehouse first
+                USE WAREHOUSE COMPUTE_WH;
+                
+                -- Or create one if none exists
+                CREATE WAREHOUSE my_warehouse
+                WITH WAREHOUSE_SIZE = 'X-SMALL'
+                AUTO_SUSPEND = 60
+                AUTO_RESUME = TRUE;
+                
+                USE WAREHOUSE my_warehouse;
+            </div>
+            
+            <h3>❌ Error 2: Warehouse Not Running</h3>
+            <div class="code-block">
+                Warehouse 'COMPUTE_WH' is suspended. Resuming...
+            </div>
+            <p><strong>What it means:</strong> The warehouse is paused (this is good for saving money!).</p>
+            <p><strong>Solution:</strong> Just wait a few seconds - Snowflake will auto-resume it if AUTO_RESUME is enabled. Or manually resume:</p>
+            <div class="code-block">
+                ALTER WAREHOUSE COMPUTE_WH RESUME;
+            </div>
+            
+            <h3>❌ Error 3: Permission Denied</h3>
+            <div class="code-block">
+                SQL access control error: Insufficient privileges
+                to operate on database 'MY_DB'
+            </div>
+            <p><strong>What it means:</strong> Your current role doesn't have permission.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Switch to a role with more permissions
+                USE ROLE ACCOUNTADMIN;
+                
+                -- Or use SYSADMIN for creating objects
+                USE ROLE SYSADMIN;
+                
+                -- Check your current role
+                SELECT CURRENT_ROLE();
+            </div>
+            
+            <h3>❌ Error 4: Object Does Not Exist</h3>
+            <div class="code-block">
+                SQL compilation error: Object 'CUSTOMERS' does not exist
+            </div>
+            <p><strong>What it means:</strong> The table, database, or schema you're trying to use doesn't exist.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Check if you're in the right database/schema
+                SELECT CURRENT_DATABASE(), CURRENT_SCHEMA();
+                
+                -- Set the correct database
+                USE DATABASE my_database;
+                USE SCHEMA my_schema;
+                
+                -- List available tables
+                SHOW TABLES;
+                
+                -- Or use full path
+                SELECT * FROM my_database.my_schema.customers;
+            </div>
+            
+            <h3>❌ Error 5: Syntax Error</h3>
+            <div class="code-block">
+                SQL compilation error: syntax error line 1 at position 15
+                unexpected 'FORM'
+            </div>
+            <p><strong>What it means:</strong> You have a typo in your SQL command.</p>
+            <p><strong>Common mistakes:</strong></p>
+            <ul>
+                <li>FROM spelled as FORM</li>
+                <li>Missing commas between column names</li>
+                <li>Forgetting semicolons at the end</li>
+                <li>Unclosed quotes or parentheses</li>
+            </ul>
+            <div class="code-block">
+                -- Wrong ❌
+                SELECT name, email FORM customers;
+                
+                -- Correct ✓
+                SELECT name, email FROM customers;
+            </div>
+            
+            <h3>❌ Error 6: Column Not Found</h3>
+            <div class="code-block">
+                SQL compilation error: invalid identifier 'EMIAL'
+            </div>
+            <p><strong>What it means:</strong> Column name is misspelled or doesn't exist.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Check actual column names
+                DESCRIBE TABLE customers;
+                
+                -- Or view sample data
+                SELECT * FROM customers LIMIT 5;
+            </div>
+            
+            <h3>❌ Error 7: Date/Time Format Issues</h3>
+            <div class="code-block">
+                Date '2026-13-01' is not recognized
+            </div>
+            <p><strong>What it means:</strong> Invalid date format (month 13 doesn't exist).</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Correct date format: YYYY-MM-DD
+                SELECT * FROM orders 
+                WHERE order_date = '2026-01-13';
+                
+                -- Convert string to date
+                SELECT TO_DATE('01/13/2026', 'MM/DD/YYYY');
+                
+                -- Common date functions
+                SELECT CURRENT_DATE();
+                SELECT DATEADD(day, 7, CURRENT_DATE());
+            </div>
+            
+            <h3>❌ Error 8: Data Type Mismatch</h3>
+            <div class="code-block">
+                Numeric value 'abc' is not recognized
+            </div>
+            <p><strong>What it means:</strong> Trying to use text where a number is expected.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Wrong ❌
+                SELECT * FROM orders WHERE price = 'expensive';
+                
+                -- Correct ✓
+                SELECT * FROM orders WHERE price > 100;
+                
+                -- Convert types if needed
+                SELECT CAST('123' AS INTEGER);
+                SELECT TRY_CAST('abc' AS INTEGER); -- Returns NULL if fails
+            </div>
+            
+            <h3>❌ Error 9: File Not Found (Loading Data)</h3>
+            <div class="code-block">
+                File 'data.csv' does not exist or not authorized
+            </div>
+            <p><strong>What it means:</strong> File path is wrong or file wasn't uploaded to stage.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- List files in stage
+                LIST @my_stage;
+                
+                -- Check stage exists
+                SHOW STAGES;
+                
+                -- Make sure file is uploaded to the stage first
+            </div>
+            
+            <h3>❌ Error 10: Quota Exceeded</h3>
+            <div class="code-block">
+                Query exceeded warehouse size limit
+            </div>
+            <p><strong>What it means:</strong> Query is too big for your warehouse size.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Increase warehouse size temporarily
+                ALTER WAREHOUSE my_warehouse 
+                SET WAREHOUSE_SIZE = 'MEDIUM';
+                
+                -- Or optimize your query with LIMIT
+                SELECT * FROM huge_table LIMIT 1000;
+                
+                -- Add WHERE clause to filter data
+                SELECT * FROM huge_table 
+                WHERE date > '2026-01-01';
+            </div>
+            
+            <h3>❌ Error 11: Connection Timeout</h3>
+            <div class="code-block">
+                Query timeout exceeded. Query was killed.
+            </div>
+            <p><strong>What it means:</strong> Query took too long to run.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Use larger warehouse for complex queries
+                ALTER WAREHOUSE my_warehouse 
+                SET WAREHOUSE_SIZE = 'LARGE';
+                
+                -- Optimize query with indexes or filters
+                -- Break into smaller chunks
+            </div>
+            
+            <h3>❌ Error 12: Duplicate Key</h3>
+            <div class="code-block">
+                Duplicate key value violates unique constraint
+            </div>
+            <p><strong>What it means:</strong> Trying to insert a value that already exists in a unique column.</p>
+            <p><strong>Solution:</strong></p>
+            <div class="code-block">
+                -- Check for existing records first
+                SELECT * FROM customers WHERE id = 123;
+                
+                -- Use UPDATE instead of INSERT
+                UPDATE customers 
+                SET email = 'new@email.com' 
+                WHERE id = 123;
+                
+                -- Or use MERGE for upsert behavior
+            </div>
+            
+            <div class="warning-box">
+                ⚠️ <strong>Still Stuck?</strong> Copy the full error message and search for it in Snowflake documentation or community forums!
+            </div>
+            
+            <h3>🔍 Debugging Tips</h3>
+            <div class="card">
+                <p><strong>1. Check Query History:</strong> See all your past queries and their errors<br><br>
+                <strong>2. Use LIMIT:</strong> Test queries on small data first<br><br>
+                <strong>3. Run Line by Line:</strong> Execute one statement at a time<br><br>
+                <strong>4. Use DESCRIBE:</strong> Check table structure before querying<br><br>
+                <strong>5. Check Current Context:</strong> Verify database, schema, role, warehouse</p>
+            </div>
+            
+            <h3>Quick Diagnostic Commands</h3>
+            <div class="code-block">
+                -- Check your current context
+                SELECT 
+                    CURRENT_ROLE() as role,
+                    CURRENT_WAREHOUSE() as warehouse,
+                    CURRENT_DATABASE() as database,
+                    CURRENT_SCHEMA() as schema;
+                
+                -- View recent query history
+                SELECT 
+                    query_text,
+                    error_message,
+                    start_time
+                FROM TABLE(INFORMATION_SCHEMA.QUERY_HISTORY())
+                WHERE error_message IS NOT NULL
+                ORDER BY start_time DESC
+                LIMIT 5;
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Remember:</strong> Errors are part of learning! Each error teaches you something new about how Snowflake works.
+            </div>
+        </div>
+        
+        <!-- Best Practices Section -->
+        <div class="section" id="tips">
+            <h2>🎯 Best Practices for Beginners</h2>
+            
+            <h3>1. Cost Management</h3>
+            <ul>
+                <li>Always set AUTO_SUSPEND on warehouses (60 seconds is good)</li>
+                <li>Use the smallest warehouse size that meets your needs</li>
+                <li>Monitor your usage in the "Admin" → "Usage" section</li>
+                <li>Suspend warehouses when done for the day</li>
+            </ul>
+            
+            <div class="warning-box">
+                ⚠️ Running a Medium warehouse 24/7 can cost ~$3,000/month. Always auto-suspend!
+            </div>
+            
+            <h3>2. Query Optimization</h3>
+            <ul>
+                <li>Use SELECT specific columns instead of SELECT *</li>
+                <li>Filter data with WHERE clauses early</li>
+                <li>Use LIMIT when testing queries</li>
+                <li>Check query history for slow queries</li>
+            </ul>
+            
+            <h3>3. Organization</h3>
+            <div class="code-block">
+                -- Good structure:
+                DATABASE → SCHEMA → TABLE
+                
+                Example:
+                SALES_DB → CUSTOMER_SCHEMA → ORDERS_TABLE
+            </div>
+            
+            <h3>4. Security Basics</h3>
+            <ul>
+                <li>Use strong passwords and enable MFA</li>
+                <li>Grant minimum necessary privileges</li>
+                <li>Don't use ACCOUNTADMIN for daily work</li>
+                <li>Create separate roles for different users</li>
+            </ul>
+            
+            <h3>5. Learning Resources</h3>
+            <div class="card">
+                <p><strong>Snowflake University:</strong> Free online courses<br>
+                <strong>Documentation:</strong> docs.snowflake.com<br>
+                <strong>Community:</strong> community.snowflake.com<br>
+                <strong>YouTube:</strong> Official Snowflake channel</p>
+            </div>
+            
+            <div class="tip-box">
+                💡 <strong>Final Tip:</strong> Start small, experiment often, and don't be afraid to make mistakes in your trial account!
+            </div>
+            
+            <h3>Quick Reference Commands</h3>
+            <div class="code-block">
+                -- Show all databases
+                SHOW DATABASES;
+                
+                -- Show all tables
+                SHOW TABLES;
+                
+                -- Describe table structure
+                DESCRIBE TABLE customers;
+                
+                -- View query history
+                SELECT * FROM TABLE(
+                  INFORMATION_SCHEMA.QUERY_HISTORY()
+                ) LIMIT 10;
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <div class="nav-item active" data-nav="basics">
+            <div class="icon">🏠</div>
+            <div>Home</div>
+        </div>
+        <div class="nav-item" data-nav="setup">
+            <div class="icon">⚙️</div>
+            <div>Setup</div>
+        </div>
+        <div class="nav-item" data-nav="sample">
+            <div class="icon">🎯</div>
+            <div>Practice</div>
+        </div>
+        <div class="nav-item" data-nav="sql">
+            <div class="icon">💻</div>
+            <div>SQL</div>
+        </div>
+        <div class="nav-item" data-nav="tips">
+            <div class="icon">💡</div>
+            <div>Tips</div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        const tabs = document.querySelectorAll('.tab');
+        const sections = document.querySelectorAll('.section');
+        const navItems = document.querySelectorAll('.nav-item');
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const sectionId = tab.dataset.section;
+                switchSection(sectionId);
+            });
+        });
+        
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.dataset.nav;
+                switchSection(sectionId);
+            });
+        });
+        
+        function switchSection(sectionId) {
+            // Update tabs
+            tabs.forEach(t => t.classList.remove('active'));
+            const targetTab = document.querySelector(`[data-section="${sectionId}"]`);
+            if (targetTab) targetTab.classList.add('active');
+            
+            // Update sections
+            sections.forEach(s => s.classList.remove('active'));
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) targetSection.classList.add('active');
+            
+            // Update nav
+            navItems.forEach(n => n.classList.remove('active'));
+            const targetNav = document.querySelector(`[data-nav="${sectionId}"]`);
+            if (targetNav) targetNav.classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            
+            sections.forEach(section => {
+                const text = section.textContent.toLowerCase();
+                const heading = section.querySelector('h2').textContent;
+                
+                if (text.includes(term)) {
+                    section.style.display = 'block';
+                    
+                    if (term.length > 2) {
+                        const highlights = section.querySelectorAll('p, li');
+                        highlights.forEach(el => {
+                            const original = el.textContent;
+                            if (original.toLowerCase().includes(term)) {
+                                section.classList.add('active');
+                                tabs.forEach(t => t.classList.remove('active'));
+                                navItems.forEach(n => n.classList.remove('active'));
+                            }
+                        });
+                    }
+                } else if (term.length > 0) {
+                    section.style.display = 'none';
+                }
+            });
+            
+            if (term.length === 0) {
+                switchSection('basics');
+            }
+        });
+    </script>
+</body>
+</html>
